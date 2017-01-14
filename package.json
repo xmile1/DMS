@@ -15,5 +15,8 @@
     "mongodb"
   ],
   "author": "Uyiosa Enabulele",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "coveralls": "^2.11.15"
+  }
 }
