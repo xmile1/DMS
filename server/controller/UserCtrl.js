@@ -6,12 +6,13 @@ const secret = process.env.SECRET || 'just another open secret';
 const userDetails = newUser => ({
   id: newUser.id,
   username: newUser.username,
-  fullNames: newUser.firstName,
+  fullNames: newUser.fullNames,
   email: newUser.email,
   RoleId: newUser.RoleId,
   createdAt: newUser.createdAt,
   updatedAt: newUser.updatedAt
 });
+
 const usersCtrl = {
   signUp(req, res) {
     db.Users.findOne({
@@ -21,7 +22,7 @@ const usersCtrl = {
     })
       .then((userExist) => {
         if (userExist) {
-          return res.status()
+          return res.status(201)
             .send({
               message: `${req.body.email} already exists`
             });
@@ -42,6 +43,8 @@ const usersCtrl = {
                   expiresIn: '2 days'
                 });
             });
+      }).catch((err) => {
+        // console.log(err);
       });
   },
   login(req, res) {
@@ -63,7 +66,63 @@ const usersCtrl = {
             .send({ message: 'Authentication failed!' });
       }
     });
+  },
+  logout(req, res) {
+    res.send({ message: `${req.body} logged out` });
+  },
+  allUsers(req, res) {
+    db.Users.findAll({ fields: [
+      'id',
+      'username',
+      'fullName',
+      'email',
+      'RoleId',
+      'createdAt',
+      'updatedAt'
+    ] })
+      .then((usersList) => {
+        res.send(usersList);
+      });
+  },
+  getUser(req, res) {
+    db.Users.findOne({
+      where: {
+        $or: [{ email: req.params.id },
+          { username: req.params.id }]
+      }
+    }).then((user) => {
+      if (!user) {
+        return res.status(401)
+        .send({ mesage: `User ${res.param.username} cannot be found` });
+      }
+      res.send(user);
+    });
+  },
+  updateUser(req, res) {
+    db.Users.find({ where: {
+      $or: [{ email: req.params.id },
+        { username: req.params.id }]
+    } }).then((user) => {
+      user.update(req.body)
+      .then((updatedUser) => {
+        res.send({ message: `${req.params.id} updated`,
+          data: userDetails(updatedUser)
+        });
+      });
+    });
+  },
+  deleteUser(req, res) {
+    db.Users.find({ where: {
+      $or: [{ email: req.params.id },
+        { username: req.params.id }]
+    } }).then((user) => {
+      user.destroy()
+      .then((deletedUser) => {
+        res.send(`${req.params.id} has been deleted`);
+      });
+    });
   }
+
 };
 
 export default usersCtrl;

@@ -13,10 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       allowNull: false,
       unique: true,
-      type: DataTypes.STRING,
-      validate: {
-        isEmail: true
-      }
+      type: DataTypes.STRING
     },
     password: {
       allowNull: false,
@@ -34,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
         //   onDelete: 'CASCADE',
         //   foreignKey: { allowNull: false }
         // });
-        //
         // User.hasMany(models.Document, { foreignKey: 'OwnerId' });
       }
     },
