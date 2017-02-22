@@ -1,5 +1,5 @@
 import DocumentsCtrl from '../controller/DocumentsCtrl';
-import Auth from '../middlewares/auth';
+import Auth from '../middlewares/Auth';
 
 // Document routes, Please take a look at the Document controller for details
 const DocumentsRoutes = (router) => {
