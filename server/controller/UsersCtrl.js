@@ -155,15 +155,16 @@ const UsersCtrl = {
   updateUser(req, res) {
     db.Roles.findById(req.decoded.RoleId)
       .then((role) => {
-        if (role.title === 'Admin' || String(req.decoded.UserId) === req.params.id) {
+        if (role.title === 'Admin'
+        || String(req.decoded.UserId) === req.params.id) {
           db.Users.find({ where: {
             id: req.params.id } })
             .then((user) => {
-              console.log(user.RoleId);
               user.update(req.body)
-                .then(updatedUser => res.send({ message: `${req.params.id} updated`,
-                  data: userDetails(updatedUser)
-                }));
+                .then(updatedUser => res
+                  .send({ message: `${req.params.id} updated`,
+                    data: userDetails(updatedUser)
+                  }));
             });
         } else {
           return (res.status(401)

@@ -1,7 +1,7 @@
 import UsersRoutes from './UsersRoutes';
 import DocumentsRoutes from './DocumentsRoutes';
 import RolesRoutes from './RolesRoutes';
-import searchRoutes from './searchRoutes';
+import searchRoutes from './SearchRoutes';
 
 // setup routes using router
 const Routes = (router) => {

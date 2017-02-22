@@ -38,3 +38,4 @@ yarn.lock
 .node_repl_history
 
 config/config.json
+.coveralls.yml
