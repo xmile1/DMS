@@ -132,7 +132,6 @@ const DocumentsCtrl = {
           return res.status(404)
             .send({ message: 'Document does not exist' });
         }
-
         db.Roles.findById(req.decoded.RoleId)
           .then((role) => {
             if (role.title === 'Admin'
