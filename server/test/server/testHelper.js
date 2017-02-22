@@ -7,6 +7,9 @@ module.exports = {
     email: faker.internet.email(),
     password: faker.internet.password(),
     RoleId: 2 }),
+  userFullNames: () => ({
+    fullNames: `${faker.name.firstName()} ${faker.name.lastName()}`,
+  }),
   admin: () => ({
     username: faker.internet.userName(),
     fullNames: `${faker.name.firstName()} ${faker.name.lastName()}`,
@@ -42,5 +45,5 @@ module.exports = {
     read: true,
     write: false,
     delete: false
-  })
+  }),
 };

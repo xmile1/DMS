@@ -115,6 +115,18 @@ describe('Document', () => {
         });
     });
 
+    it('Should get all documents and public documents for a specific user'
+    , (done) => {
+      request.get(`/api/users/${regularDetails.user.id}/documents/all`)
+        .set({ 'x-access-token': regularDetails.token })
+        .expect(200)
+        .end((err, res) => {
+          expect(Array.isArray(res.body)).to.equal(true);
+          expect(res.body.length).to.be.greaterThan(3);
+          done();
+        });
+    });
+
     it('Should return all documents to the admin', (done) => {
       request.get('/api/documents')
         .set({ 'x-access-token': adminDetails.token })
