@@ -1,5 +1,5 @@
 import UsersCtrl from '../controller/UsersCtrl';
-import Auth from '../middlewares/auth';
+import Auth from '../middlewares/Auth';
 
 // User routes, Please take a look at the User controller for details
 const UsersRoutes = (router) => {
