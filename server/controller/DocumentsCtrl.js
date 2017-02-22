@@ -63,13 +63,13 @@ const DocumentsCtrl = {
       }
     });
   },
+
   /**
    * Gets all documents belonging to a specific user with public documents
    * @param {Object} req Request object
    * @param {Object} res Response object
    * @returns {Void} Returns Void
    */
-
   getAllUserDocuments(req, res) {
     db.Roles.findById(req.decoded.RoleId)
     .then((role) => {

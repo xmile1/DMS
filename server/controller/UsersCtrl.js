@@ -14,6 +14,13 @@ const userDetails = newUser => ({
 });
 
 const UsersCtrl = {
+
+  /**
+   * signUp - Create a user
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {void} Returns void
+   */
   signUp(req, res) {
     db.Users.findOne({
       where: {
@@ -57,6 +64,13 @@ const UsersCtrl = {
         });
       });
   },
+
+  /**
+   * login - Login Authentication for users
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {void} Returns void
+   */
   login(req, res) {
     db.Users.findOne({
       where: {
@@ -69,7 +83,7 @@ const UsersCtrl = {
           UserId: user.id,
           RoleId: user.RoleId
         }, secret, { expiresIn: '2 days' });
-        res.send({ user, token, expiresIn: '2 days' });
+        res.send({ user: userDetails(user), token, expiresIn: '2 days' });
       } else {
         res.status(401)
             .send({ message: 'Authentication failed!' });
@@ -77,9 +91,24 @@ const UsersCtrl = {
     }).catch(() => {
     });
   },
+
+  /**
+   * logout - Logs out a user
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {void} Returns void
+   */
   logout(req, res) {
     res.send({ message: `User with id:${req.decoded.UserId} logged out` });
   },
+
+
+  /**
+   * allUsers - Gets all user details
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {void} Returns void
+   */
   allUsers(req, res) {
     db.Users.findAll({ fields: [
       'id',
@@ -94,6 +123,14 @@ const UsersCtrl = {
         res.send(usersList);
       });
   },
+
+
+  /**
+   * getUser - Get a single user based on email or username
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {void} Returns void
+   */
   getUser(req, res) {
     db.Users.findOne({
       where: {
@@ -103,34 +140,61 @@ const UsersCtrl = {
     }).then((user) => {
       if (!user) {
         return res.status(401)
-        .send({ mesage: `User ${res.param.username} cannot be found` });
+        .send({ message: `User ${req.params.id} cannot be found` });
       }
       res.send(user);
     });
   },
+
+  /**
+   * updateUser - Update user details
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {void} Returns void
+   */
   updateUser(req, res) {
-    db.Users.find({ where: {
-      id: req.params.id } })
-      .then((user) => {
-        user.update(req.body)
-      .then((updatedUser) => {
-        res.send({ message: `${req.params.id} updated`,
-          data: userDetails(updatedUser)
-        });
-      });
+    db.Roles.findById(req.decoded.RoleId)
+      .then((role) => {
+        if (role.title === 'Admin' || String(req.decoded.UserId) === req.params.id) {
+          db.Users.find({ where: {
+            id: req.params.id } })
+            .then((user) => {
+              console.log(user.RoleId);
+              user.update(req.body)
+                .then(updatedUser => res.send({ message: `${req.params.id} updated`,
+                  data: userDetails(updatedUser)
+                }));
+            });
+        } else {
+          return (res.status(401)
+         .send({ message: 'Unauthorized Access' }));
+        }
       });
   },
+
+  /**
+   * deleteUser - Delete a user
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {void} Returns void
+   */
   deleteUser(req, res) {
-    db.Users.find({ where: {
-      id: req.params.id } })
+    db.Roles.findById(req.decoded.RoleId)
+      .then((role) => {
+        if (role.title === 'Admin') {
+          db.Users.find({ where: {
+            id: req.params.id } })
       .then((user) => {
         user.destroy()
       .then(() => {
-        res.send(`${req.params.id} has been deleted`);
+        res.status(201).send({ message: `${req.params.id} has been deleted` });
       });
+      });
+        } else {
+          res.status(401).send({ message: 'Unauthorized Access' });
+        }
       });
   }
-
 };
 
 export default UsersCtrl;

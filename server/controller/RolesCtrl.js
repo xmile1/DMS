@@ -1,18 +1,33 @@
 import db from '../models';
 
 const RoleCtrl = {
-  getRoles: (req, res) => {
+
+
+  /**
+   * getRoles - Get all Roles
+   * @param {Object} req Request object
+   * @param {Object} res Response object
+   * @returns {Void} Returns void
+   */
+  getRoles(req, res) {
     db.Roles.findAll({})
     .then((role) => {
       res.status(201)
       .send(role);
     });
   },
-  getRole: (req, res) => {
+
+  /**
+   * getRole - get Role by Id
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {Void} Returns void
+   */
+  getRole(req, res) {
     db.Roles.findById(req.params.id)
     .then((role) => {
       if (!role.title) {
-        res.status(404)
+        return res.status(404)
         .send(
           { message: `Role with Id:${req.params.id} does not exist` });
       }
@@ -20,13 +35,20 @@ const RoleCtrl = {
       .send(role);
     })
     .catch((err) => {
-      res.status(404)
+      res.status(403)
       .send(
         { message: 'Error Occured',
           details: err });
     });
   },
-  createRoles: (req, res) => {
+
+  /**
+   * createRoles - Creates a new role
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {Void} Returns void
+   */
+  createRoles(req, res) {
     db.Roles.findOne({ where: { title: req.body.title } })
     .then((role) => {
       if (role) {
@@ -46,7 +68,14 @@ const RoleCtrl = {
       });
     });
   },
-  updateRoles: (req, res) => {
+
+  /**
+   * updateRoles - Update role based on provided parameters
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {Void} Returns void
+   */
+  updateRoles(req, res) {
     db.Roles.find({ where: {
       $or: [{ id: req.params.id },
         { title: req.params.id }]
@@ -64,7 +93,14 @@ const RoleCtrl = {
       });
     });
   },
-  deleteRoles: (req, res) => {
+
+  /**
+   * deleteRoles - Delete Role based on id or title
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {Void} Returns void
+   */
+  deleteRoles(req, res) {
     db.Roles.find({ where: {
       $or: [{ id: req.params.id },
         { title: req.params.id }]

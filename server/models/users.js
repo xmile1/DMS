@@ -39,17 +39,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     instanceMethods: {
       /**
-       * Compare plain password to user's hashed password
+       * validate plain password against user's hashed password
        * @method
        * @param {String} password
-       * @returns {Boolean} password match
+       * @returns {Boolean} Validity of passowrd
        */
       validPassword(password) {
         return bcrypt.compareSync(password, this.password);
       },
 
       /**
-       * Hash user's password
+       * Hash input password using bcrypt
        * @method
        * @returns {Void} no return
        */
