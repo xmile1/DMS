@@ -31,7 +31,7 @@ const UsersCtrl = {
         if (userExist) {
           return res.status(201)
             .send({
-              message: `${req.body.email} already exists`
+              message: 'Email already exists'
             });
         }
         db.Users.create(req.body)
