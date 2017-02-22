@@ -21,13 +21,13 @@ const compiler = webpack(config);
 const env = process.env.NODE_ENV || 'development';
 
 // bundle bundle frontend using webpack
-if (env !== 'test') {
-  app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: config.output.publicPath
-  }));
-}
-app.use(require('webpack-hot-middleware')(compiler));
+// if (env !== 'test') {
+//   app.use(require('webpack-dev-middleware')(compiler, {
+//     noInfo: true,
+//     publicPath: config.output.publicPath
+//   }));
+// }
+// app.use(require('webpack-hot-middleware')(compiler));
 
 // using express router for routes
 Routes(router);
@@ -35,8 +35,8 @@ Routes(router);
 // prefix /api for all routes
 app.use('/api', router);
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../../client/index.html'));
+// });
 
 export default app;
