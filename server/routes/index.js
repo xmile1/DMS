@@ -3,7 +3,7 @@ import DocumentsRoutes from './DocumentsRoutes';
 import RolesRoutes from './RolesRoutes';
 import searchRoutes from './searchRoutes';
 
-// setup routes
+// setup routes using router
 const Routes = (router) => {
   UsersRoutes(router);
   DocumentsRoutes(router);
