@@ -13,7 +13,7 @@ const router = express.Router();
 // Log all requests
 app.use(morgan('dev'));
 
-// Parse incoming request body as JSON
+// make request body JSON
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

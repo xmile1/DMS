@@ -8,10 +8,11 @@ services:
   - postgresql
 
 before_script:
-  - yarn install
+  - npm install
   - psql -c 'create database doc_manager_test;' -U postgres
   - dropdb --if-exists doc_manager_test && createdb doc_manager_test
-  - NODE_ENV=test npm run db-migrate-test
+  - NODE_ENV=test npm run db:migrate:test
+  - npm run coveralls
 
 after_success:
 - npm run coveralls
