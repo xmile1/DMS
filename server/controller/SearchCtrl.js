@@ -39,10 +39,13 @@ const SearchCtrl = {
     .then((role) => {
       if (role.title === 'Admin' ||
       String(req.decoded.UserId) === req.params.userId) {
-        db.Documents.findAll({ where: {
-          OwnerId: req.params.userId,
-          title: {
-            $iLike: `%${req.params.term}%` } } })
+        db.Documents.findAll({
+          limit: req.query.limit,
+          order: '"createdAt" DESC',
+          where: {
+            OwnerId: req.params.userId,
+            title: {
+              $iLike: `%${req.params.term}%` } } })
           .then(documents => res.send(documents));
       } else {
         res.send({ message: 'Unauthorized Access' });
@@ -62,11 +65,13 @@ const SearchCtrl = {
     .then((role) => {
       if (role.title === 'Admin' ||
        String(req.decoded.UserId) === req.params.userId) {
-        db.Documents.findAll({ where: {
-          $and: { $or: {
-            permission: 'public', OwnerId: req.params.userId },
-            title: { $iLike: `%${req.params.term}%` } }
-        } })
+        db.Documents.findAll({ limit: req.query.limit,
+          order: '"createdAt" DESC',
+          where: {
+            $and: { $or: {
+              permission: 'public', OwnerId: req.params.userId },
+              title: { $iLike: `%${req.params.term}%` } }
+          } })
           .then(documents => res.send(documents));
       } else {
         res.send({ message: 'Unauthorized Access' });
@@ -83,8 +88,10 @@ const SearchCtrl = {
    * @returns {Void} Returns Void
    */
   allUsers(req, res) {
-    db.Users.findAll({ where: {
-      fullNames: { $iLike: `%${req.params.term}%` } } })
+    db.Users.findAll({ limit: req.query.limit,
+      order: '"createdAt" DESC',
+      where: {
+        fullNames: { $iLike: `%${req.params.term}%` } } })
       .then((usersList) => {
         res.status(201);
         res.send(usersList);
@@ -99,8 +106,10 @@ const SearchCtrl = {
    * @returns {Void} Returns Void
    */
   allRoles(req, res) {
-    db.Roles.findAll({ where: {
-      title: { $iLike: `%${req.params.term}%` } } })
+    db.Roles.findAll({ limit: req.query.limit,
+      order: '"createdAt" DESC',
+      where: {
+        title: { $iLike: `%${req.params.term}%` } } })
     .then((role) => {
       res.status(201)
       .send(role);
