@@ -2,7 +2,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
-import webpack from 'webpack';
+// import webpack from 'webpack';
 import path from 'path';
 import Routes from '../routes/index';
 
