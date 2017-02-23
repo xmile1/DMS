@@ -56,12 +56,6 @@ const UsersCtrl = {
                 details: err
               });
             });
-      })
-      .catch((err) => {
-        res.send({ error: {
-          message: 'Error occured checking existing user',
-          details: err }
-        });
       });
   },
 
@@ -99,6 +93,10 @@ const UsersCtrl = {
    * @returns {void} Returns void
    */
   logout(req, res) {
+    db.invalidToken.create({ token: req.headers['x-access-token']
+    || req.headers.authorization });
+    db.invalidToken.destroy({ where: {
+      createdAt: { $lt: new Date() - (48 * 60 * 60 * 1000) } } });
     res.send({ message: `User with id:${req.decoded.UserId} logged out` });
   },
 
