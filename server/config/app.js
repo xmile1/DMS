@@ -5,7 +5,6 @@ import morgan from 'morgan';
 import webpack from 'webpack';
 import path from 'path';
 import Routes from '../routes/index';
-import config from '../../webpack.config.dev';
 
 const app = express();
 const router = express.Router();
@@ -17,11 +16,12 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const compiler = webpack(config);
+
 const env = process.env.NODE_ENV || 'development';
 
 // bundle bundle frontend using webpack
 // if (env !== 'test') {
+//   const compiler = webpack(config);
 //   app.use(require('webpack-dev-middleware')(compiler, {
 //     noInfo: true,
 //     publicPath: config.output.publicPath
