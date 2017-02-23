@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "echo 'App starting'",
-    "heroku-postbuild": "NODE_ENV=production && npm run build",
+    "heroku-postbuild": "NODE_ENV=production && npm run build && npm run db:migrate",
     "test": "NODE_ENV=test npm run db:seed && NODE_ENV=test _mocha --compilers js:babel-core/register server/test/server/*.spec.js",
     "test:watch": "npm run test -- -w",
     "start": "node dist/server.js",
@@ -16,7 +16,7 @@
     "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls",
     "db:seed": "./node_modules/.bin/babel-node server/test/server/seedHelper.js",
     "db:migrate:test": "NODE_ENV=test sequelize db:migrate",
-    "build": "rm -rf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./tests,./coverage --copy-files && npm run db:migrate"
+    "build": "rm -rf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./tests,./coverage"
   },
   "keywords": [
     "document",
@@ -53,6 +53,10 @@
     "open": "0.0.5"
   },
   "dependencies": {
+    "babel-loader": "6.2.4",
+    "babel-plugin-react-display-name": "2.0.0",
+    "babel-preset-react": "6.5.0",
+    "babel-preset-react-hmre": "1.1.1",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.21.0",
     "babel-istanbul": "^0.12.1",
@@ -81,19 +85,6 @@
     "npm-run-all": "1.8.0",
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
-    "react": "15.0.2",
-    "react-addons-test-utils": "15.0.2",
-    "react-dom": "15.0.2",
-    "react-flexbox-grid": "^0.10.2",
-    "react-pure-grid": "^2.1.1",
-    "react-redux": "4.4.5",
-    "react-router": "2.4.0",
-    "react-router-redux": "4.0.4",
-    "react-tap-event-plugin": "^1.0.0",
-    "redux": "3.5.2",
-    "redux-immutable-state-invariant": "1.2.3",
-    "redux-mock-store": "1.0.2",
-    "redux-thunk": "2.0.1",
     "rimraf": "2.5.2",
     "sequelize": "^3.29.0",
     "sequelize-cli": "^2.5.1",
