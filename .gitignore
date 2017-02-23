@@ -39,3 +39,4 @@ yarn.lock
 
 config/config.json
 .coveralls.yml
+dist
