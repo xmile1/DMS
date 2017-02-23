@@ -17,6 +17,14 @@ const Auth = {
       return res.status(401).send({ message: 'Unauthorized Access' });
     }
 
+    db.invalidToken.find({ where: { token } })
+    .then((invalidToken) => {
+      if (invalidToken) {
+        return res.status(401)
+      .send({ message: 'Invalid Token' });
+      }
+    });
+
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
         return res.status(401).send({ message: 'Invalid Token' });
