@@ -119,6 +119,23 @@ describe('Users', () => {
       done();
     });
     });
+
+    it('Should logout a user', (done) => {
+      let user = helper.user();
+      request.post('/api/users')
+    .type('form')
+    .send(user)
+    .end((err, res) => {
+      user = res.body.user;
+      request.post('/api/users/logout')
+      .set({ 'x-access-token': res.body.token })
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal(`User with id:${user.id} logged out`);
+        done();
+      });
+    });
+    });
   });
 
   describe('Get Users', () => {
