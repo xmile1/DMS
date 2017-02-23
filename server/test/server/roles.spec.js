@@ -117,6 +117,7 @@ describe('Role', () => {
       request.get('/api/roles/5000')
         .set({ 'x-access-token': adminDetails.token })
         .end((err, res) => {
+          expect(res.status).to.equal(404);
           expect(res.body.message)
             .to.equal('Error Occured');
           done();
