@@ -42,7 +42,7 @@ describe('Search', () => {
         });
     });
 
-    it('Should returnuser`s and public documents based on search criteria',
+    it('Should return user`s and public documents based on search criteria',
      (done) => {
        request.get('/api/search/documents/1/something')
         .set({ 'x-access-token': adminDetails.token })
@@ -59,6 +59,36 @@ describe('Search', () => {
           done();
         });
     });
+
+    it('Should fail for non admin users', (done) => {
+      request.get('/api/search/documents/something')
+            .set({ 'x-access-token': regularDetails.token })
+        .end((err, res) => {
+          expect(res.status).to.be.equal(403);
+          done();
+        });
+    });
+
+    it('Should fail user document search for non owner of the document'
+    , (done) => {
+      request.get('/api/search/document/1/something')
+        .set({ 'x-access-token': regularDetails.token })
+        .end((err, res) => {
+          expect(res.body.message).to.be.equal('Unauthorized Access');
+          done();
+        });
+    });
+
+    it('Should fail user documents search for non owner of the document'
+    , (done) => {
+      request.get('/api/search/documents/1/something')
+        .end((err, res) => {
+          expect(res.body.message).to.be.equal('Unauthorized Access');
+          done();
+        });
+    });
+
+
     describe('Search Users', () => {
       it('Should return a list of users based on search criteria', (done) => {
         request.get('/api/search/users/uyi')

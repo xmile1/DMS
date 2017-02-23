@@ -24,7 +24,7 @@ const RoleCtrl = {
    * @returns {Void} Returns void
    */
   getRole(req, res) {
-    db.Roles.findById(req.params.id)
+    return db.Roles.findById(req.params.id)
     .then((role) => {
       if (!role.title) {
         return res.status(404)
@@ -35,7 +35,7 @@ const RoleCtrl = {
       .send(role);
     })
     .catch((err) => {
-      res.status(403)
+      res.status(404)
       .send(
         { message: 'Error Occured',
           details: err });
