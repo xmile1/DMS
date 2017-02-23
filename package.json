@@ -53,6 +53,10 @@
     "open": "0.0.5"
   },
   "dependencies": {
+    "babel-loader": "6.2.4",
+    "babel-plugin-react-display-name": "2.0.0",
+    "babel-preset-react": "6.5.0",
+    "babel-preset-react-hmre": "1.1.1",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.21.0",
     "babel-istanbul": "^0.12.1",
