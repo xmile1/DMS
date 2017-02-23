@@ -33,12 +33,5 @@
             "ClassDeclaration": true
         }
     }]
-  },
-  "ecmaFeatures": {
-        "jsx": true
-    },
-
-    "plugins": [
-        "react"
-    ]
+  }
 }
