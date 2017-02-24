@@ -94,7 +94,7 @@ describe('Search', () => {
         request.get('/api/search/users/uyi')
         .set({ 'x-access-token': adminDetails.token })
         .end((err, res) => {
-          expect(res.body[0].fullNames.includes('uyiosa'));
+          expect(res.body.users[0].fullNames.includes('uyiosa'));
           done();
         });
       });

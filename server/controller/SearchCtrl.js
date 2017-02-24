@@ -13,8 +13,10 @@ const SearchCtrl = {
     db.Roles.findById(req.decoded.RoleId)
     .then((role) => {
       if (role.title === 'Admin') {
+        const limit = req.query.limit
+        && req.query.limit < 1 ? null : req.query.limit;
         db.Documents.findAll({
-          limit: req.query.limit,
+          limit,
           order: '"createdAt" DESC',
           where: { title: { $iLike: `%${req.params.term}%` } }
         })
@@ -39,8 +41,10 @@ const SearchCtrl = {
     .then((role) => {
       if (role.title === 'Admin' ||
       String(req.decoded.UserId) === req.params.userId) {
+        const limit = req.query.limit
+        && req.query.limit < 1 ? null : req.query.limit;
         db.Documents.findAll({
-          limit: req.query.limit,
+          limit,
           order: '"createdAt" DESC',
           where: {
             OwnerId: req.params.userId,
@@ -65,7 +69,10 @@ const SearchCtrl = {
     .then((role) => {
       if (role.title === 'Admin' ||
        String(req.decoded.UserId) === req.params.userId) {
-        db.Documents.findAll({ limit: req.query.limit,
+        const limit = req.query.limit
+         && req.query.limit < 1 ? null : req.query.limit;
+        db.Documents.findAll({
+          limit,
           order: '"createdAt" DESC',
           where: {
             $and: { $or: {
@@ -88,13 +95,16 @@ const SearchCtrl = {
    * @returns {Void} Returns Void
    */
   allUsers(req, res) {
-    db.Users.findAll({ limit: req.query.limit,
+    const limit = req.query.limit
+    && req.query.limit < 1 ? null : req.query.limit;
+    db.Users.findAndCountAll({
+      limit,
       order: '"createdAt" DESC',
       where: {
         fullNames: { $iLike: `%${req.params.term}%` } } })
       .then((usersList) => {
         res.status(201);
-        res.send(usersList);
+        res.send({ users: usersList.rows, count: usersList.count });
       });
   },
 
@@ -106,7 +116,10 @@ const SearchCtrl = {
    * @returns {Void} Returns Void
    */
   allRoles(req, res) {
-    db.Roles.findAll({ limit: req.query.limit,
+    const limit = req.query.limit
+    && req.query.limit < 1 ? null : req.query.limit;
+    db.Roles.findAll({
+      limit,
       order: '"createdAt" DESC',
       where: {
         title: { $iLike: `%${req.params.term}%` } } })
