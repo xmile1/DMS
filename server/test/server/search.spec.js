@@ -47,7 +47,7 @@ describe('Search', () => {
        request.get('/api/search/documents/1/something')
         .set({ 'x-access-token': adminDetails.token })
         .end((err, res) => {
-          expect(res.body[0].title.includes('something'));
+          expect(res.body.documents[0].title.includes('something'));
           done();
         });
      });

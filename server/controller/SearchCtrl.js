@@ -71,7 +71,7 @@ const SearchCtrl = {
        String(req.decoded.UserId) === req.params.userId) {
         const limit = req.query.limit
          && req.query.limit < 1 ? null : req.query.limit;
-        db.Documents.findAll({
+        db.Documents.findAndCountAll({
           limit,
           order: '"createdAt" DESC',
           where: {
@@ -79,7 +79,7 @@ const SearchCtrl = {
               permission: 'public', OwnerId: req.params.userId },
               title: { $iLike: `%${req.params.term}%` } }
           } })
-          .then(documents => res.send(documents));
+          .then(documents => res.send({ documents: documents.rows, count: documents.count }));
       } else {
         res.send({ message: 'Unauthorized Access' });
       }

@@ -28,7 +28,7 @@ Document Management System provides a restful API for users to create and manage
 1. Run test `npm test`.
 
 ### Postman Collection
-[![Run in Postman](https://run.pstmn.io/button.svg)][postman-link]
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/af275c0853c53335ae41)
 
 Create a Postman environment and set `url` and `token` variables or download and import a production environment from this [link][postman-env-link]
 
