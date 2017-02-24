@@ -1,7 +1,8 @@
 # Document Management System API.
 [![Build Status](https://travis-ci.org/andela-uenabulele/document-management-system.svg?branch=development)](https://travis-ci.org/andela-uenabulele/document-management-system)
-[![Coverage Status](https://coveralls.io/repos/github/andela-uenabulele/document-management-system/badge.svg?branch=master)](https://coveralls.io/github/andela-uenabulele/document-management-system?branch=development)
-[![Code Climate](https://codeclimate.com/github/andela-uenabulele/document-management-system/badges/gpa.svg)](https://codeclimate.com/github/andela-uenabulele/document-management-system)
+[![Coverage Status](https://coveralls.io/repos/github/andela-uenabulele/document-management-system/badge.svg?branch=development)](https://coveralls.io/github/andela-uenabulele/document-management-system?branch=development)
+
+<!-- [![Code Climate](https://codeclimate.com/github/andela-uenabulele/document-management-system/badges/gpa.svg)](https://codeclimate.com/github/andela-uenabulele/document-management-system) -->
 
 
 Document Management System provides a restful API for users to create and manage documents giving different privileges based on user roles and managing authentication using JWT.
@@ -27,7 +28,7 @@ Document Management System provides a restful API for users to create and manage
 1. Run test `npm test`.
 
 ### Postman Collection
-[![Run in Postman](https://run.pstmn.io/button.svg)][postman-link]
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/af275c0853c53335ae41)
 
 Create a Postman environment and set `url` and `token` variables or download and import a production environment from this [link][postman-env-link]
 
