@@ -1,8 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const Documents = sequelize.define('Documents', {
-    title: { type: DataTypes.STRING, allowNull: false },
+    title: { type: DataTypes.STRING, allowNull: false, unique: true },
     content: DataTypes.TEXT,
-    permission: { type: DataTypes.TEXT, defaultValue: 'Public' },
+    permission: { type: DataTypes.TEXT, defaultValue: 'public' },
     OwnerId: DataTypes.INTEGER
   }, {
     classMethods: {

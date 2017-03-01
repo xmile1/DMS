@@ -10,7 +10,7 @@ class SeedHelper {
 
   /**
    * Populate database with priority based on associations
-   * @return {Void} - Returns Void
+   * @return {void} - Returns void
    */
   static init() {
     db.sequelize.sync({ force: true })
@@ -37,7 +37,7 @@ class SeedHelper {
         delete: true
       },
       {
-        title: 'Registered',
+        title: 'Regular',
         read: true,
         write: false,
         delete: true

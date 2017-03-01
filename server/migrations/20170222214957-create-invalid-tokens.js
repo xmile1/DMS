@@ -1,8 +1,6 @@
-
-
 module.exports = {
   up(queryInterface, Sequelize) {
-    return queryInterface.createTable('invalidTokens', {
+    return queryInterface.createTable('InvalidTokens', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -24,6 +22,6 @@ module.exports = {
     });
   },
   down(queryInterface, Sequelize) {
-    return queryInterface.dropTable('invalidTokens');
+    return queryInterface.dropTable('InvalidTokens');
   }
 };

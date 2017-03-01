@@ -10,7 +10,7 @@ const UsersRoutes = (router) => {
   router.route('/users/:id')
     .get(Auth.verifyToken, UsersCtrl.getUser)
     .put(Auth.verifyToken, UsersCtrl.updateUser)
-    .delete(Auth.verifyToken, UsersCtrl.deleteUser);
+    .delete(Auth.verifyToken, Auth.verifyAdmin, UsersCtrl.deleteUser);
 
   router.route('/users/login')
     .post(UsersCtrl.login);

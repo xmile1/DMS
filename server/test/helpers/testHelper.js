@@ -26,7 +26,7 @@ module.exports = {
   document: () => ({
     title: faker.lorem.word(),
     content: faker.lorem.paragraph(),
-    permission: 'Public',
+    permission: 'public',
     OwnerId: 1
   }),
   documentNoPermission: () => ({

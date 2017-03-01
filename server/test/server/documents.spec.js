@@ -1,6 +1,6 @@
 import chai from 'chai';
 import supertest from 'supertest';
-import helper from './testHelper';
+import helper from '../helpers/testHelper';
 import app from '../../config/app';
 
 
@@ -64,7 +64,7 @@ describe('Document', () => {
         .expect(201)
         .end((err, res) => {
           expect(res.body).to.have.property('permission');
-          expect(res.body.permission).to.equal('Public');
+          expect(res.body.permission).to.equal('public');
           done();
         });
     });
@@ -73,9 +73,9 @@ describe('Document', () => {
       request.post('/api/documents')
         .set({ 'x-access-token': adminDetails.token })
         .send({ title: null })
-        .expect(400)
         .end((err, res) => {
-          expect(res.body[0].message).to.equal('title cannot be null');
+          expect(500);
+          expect(res.body.message).to.equal('Unknown error occurred');
           done();
         });
     });
@@ -123,6 +123,14 @@ describe('Document', () => {
         .end((err, res) => {
           expect(Array.isArray(res.body)).to.equal(true);
           expect(res.body.length).to.be.greaterThan(3);
+          expect(res.body[0].permission).to.equal('public');
+          expect(() => {
+            res.body.forEach((element) => {
+              if (element.OwnerId === regularDetails.user.id) {
+                return true;
+              }
+            });
+          });
           done();
         });
     });
@@ -145,6 +153,8 @@ describe('Document', () => {
           if (err) return done(err);
           expect(Array.isArray(res.body)).to.equal(true);
           expect(res.body[0].id).not.to.equal(1);
+          expect(res.body[0].createdAt)
+          .to.be.greaterThan(res.body[1].createdAt);
           done();
         });
     });
