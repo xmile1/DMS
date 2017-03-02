@@ -1,6 +1,6 @@
 import chai from 'chai';
 import supertest from 'supertest';
-import helper from './testHelper';
+import helper from '../helpers/testHelper';
 import app from '../../config/app';
 
 const request = supertest.agent(app);
@@ -42,12 +42,13 @@ describe('Users', () => {
       .send(user)
       .expect(400)
       .end((err, res) => {
-        expect(res.body.message.includes('Error')).to.equal(true);
+        expect(res.body.message
+          .includes('Unexpected error occurred creating user'));
         done();
       });
     });
 
-    it('new users should be assigned a default role(id=2,Registered)',
+    it('new users should be assigned a default role(id=2,Regular)',
      (done) => {
        request.post('/api/users')
       .send(helper.noRoleUser())
@@ -126,13 +127,20 @@ describe('Users', () => {
     .type('form')
     .send(user)
     .end((err, res) => {
-      user = res.body.user;
+      user = res.body;
       request.post('/api/users/logout')
-      .set({ 'x-access-token': res.body.token })
+      .set({ 'x-access-token': user.token })
       .expect(200)
       .end((err, res) => {
-        expect(res.body.message).to.equal(`User with id:${user.id} logged out`);
-        done();
+        expect(res.body.message)
+        .to.equal(`User with id:${user.user.id} logged out`);
+        request.get('/api/documents/1')
+          .set({ 'x-access-token': user.token })
+          .end((err, res) => {
+            expect(res.body.message)
+            .to.equal('Invalid Token');
+            done();
+          });
       });
     });
     });
@@ -228,7 +236,7 @@ describe('Users', () => {
       request.get('/api/users/bademail')
     .set({ 'x-access-token': adminDetails.token })
       .end((err, res) => {
-        expect(res.status).to.equal(401);
+        expect(res.status).to.equal(404);
         expect(res.body.message).to.be.equal('User bademail cannot be found');
         done();
       });
@@ -286,7 +294,7 @@ describe('Users', () => {
     .set({ 'x-access-token': regularDetails.token })
     .send(helper.userFullNames())
       .end((err, res) => {
-        expect(res.status).to.equal(401);
+        expect(res.status).to.equal(403);
         done();
       });
     });
@@ -340,7 +348,7 @@ describe('Users', () => {
       request.delete(`/api/users/${regularDetails.user.id}`)
     .set({ 'x-access-token': adminDetails.token })
       .end((err, res) => {
-        expect(res.status).to.equal(201);
+        expect(res.status).to.equal(200);
         expect(res.body.message)
         .to.be.equal(`${regularDetails.user.id} has been deleted`);
         done();
@@ -353,20 +361,30 @@ describe('Users', () => {
     .set({ 'x-access-token': regularDetails.token })
     .send(helper.userFullNames())
       .end((err, res) => {
-        expect(res.status).to.equal(401);
+        expect(res.status).to.equal(403);
         expect(res.body.message)
-        .to.equal('Unauthorized Access');
+        .to.equal('Admin access is required!');
         done();
       });
     });
 
-    it('should deny a user rom deleting himself', (done) => {
+    it('should deny a user from deleting himself', (done) => {
       request.delete(`/api/users/${regularDetails.user.id}`)
     .set({ 'x-access-token': regularDetails.token })
       .end((err, res) => {
-        expect(res.status).to.equal(401);
+        expect(res.status).to.equal(403);
         expect(res.body.message)
-        .to.equal('Unauthorized Access');
+        .to.equal('Admin access is required!');
+        done();
+      });
+    });
+    it('should deny deleting the admin', (done) => {
+      request.delete(`/api/users/${adminDetails.user.id}`)
+    .set({ 'x-access-token': adminDetails.token })
+      .end((err, res) => {
+        expect(res.status).to.equal(403);
+        expect(res.body.message)
+        .to.equal('You cannot Delete the Admin');
         done();
       });
     });

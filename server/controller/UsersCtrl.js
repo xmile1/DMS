@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import db from '../models';
+import Helpers from './Helpers';
 
 const secret = process.env.SECRET || 'just another open secret';
 
@@ -29,9 +30,15 @@ const UsersCtrl = {
     })
       .then((userExist) => {
         if (userExist) {
-          return res.status(201)
+          return res.status(409)
             .send({
               message: 'Email already exists'
+            });
+        }
+        if (req.body.RoleId === 1) {
+          return res.status(403)
+            .send({
+              message: 'You cannot signup as an Admin'
             });
         }
         db.Users.create(req.body)
@@ -51,9 +58,9 @@ const UsersCtrl = {
                 });
             })
             .catch((err) => {
-              res.send({
-                message: 'Error occured creating user',
-                details: err
+              res.status(500)
+              .send({
+                message: 'Unexpected error occured creating user'
               });
             });
       });
@@ -77,12 +84,12 @@ const UsersCtrl = {
           UserId: user.id,
           RoleId: user.RoleId
         }, secret, { expiresIn: '2 days' });
-        res.send({ user: userDetails(user), token, expiresIn: '2 days' });
+        res.status(200)
+        .send({ user: userDetails(user), token, expiresIn: '2 days' });
       } else {
-        res.status(401)
+        res.status(400)
             .send({ message: 'Authentication failed!' });
       }
-    }).catch(() => {
     });
   },
 
@@ -93,11 +100,12 @@ const UsersCtrl = {
    * @returns {void} Returns void
    */
   logout(req, res) {
-    db.invalidToken.create({ token: req.headers['x-access-token']
+    db.InvalidTokens.create({ token: req.headers['x-access-token']
     || req.headers.authorization });
-    db.invalidToken.destroy({ where: {
+    db.InvalidTokens.destroy({ where: {
       createdAt: { $lt: new Date() - (48 * 60 * 60 * 1000) } } });
-    res.send({ message: `User with id:${req.decoded.UserId} logged out` });
+    return res.status(200).send({ message:
+      `User with id:${req.decoded.UserId} logged out` });
   },
 
 
@@ -117,9 +125,7 @@ const UsersCtrl = {
       'createdAt',
       'updatedAt'
     ] })
-      .then((usersList) => {
-        res.send(usersList);
-      });
+      .then(usersList => res.status(200).send(usersList));
   },
 
 
@@ -137,13 +143,25 @@ const UsersCtrl = {
       }
     }).then((user) => {
       if (!user) {
-        return res.status(401)
+        return res.status(404)
         .send({ message: `User ${req.params.id} cannot be found` });
       }
-      res.send(user);
+      res.status(200).send(user);
     });
   },
 
+  /**
+   * searchUsers - Search list of user where the search term
+   * matches the fullnames
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {void} Returns void
+   */
+  searchUsers(req, res) {
+    req.body.entity = 'Users';
+    req.body.columnToSearch = 'fullNames';
+    Helpers.search(req, res);
+  },
   /**
    * updateUser - Update user details
    * @param {Object} req Request Object
@@ -153,23 +171,28 @@ const UsersCtrl = {
   updateUser(req, res) {
     db.Roles.findById(req.decoded.RoleId)
       .then((role) => {
-        if (role.title === 'Admin'
-        || String(req.decoded.UserId) === req.params.id) {
+        if (Helpers.isAdmin(req, res)
+        || Helpers.isOwner(req, res)) {
           db.Users.find({ where: {
             id: req.params.id } })
             .then((user) => {
               user.update(req.body)
                 .then(updatedUser => res
-                  .send({ message: `${req.params.id} updated`,
+                  .status(200).send({ message: `${req.params.id} updated`,
                     data: userDetails(updatedUser)
                   }));
             });
         } else {
-          return (res.status(401)
+          return (res.status(403)
          .send({ message: 'Unauthorized Access' }));
         }
       });
   },
+
+  // searchUsers(){
+  //   req.entity = 'Users';
+  //   helper.search()
+  // },
 
   /**
    * deleteUser - Delete a user
@@ -178,20 +201,16 @@ const UsersCtrl = {
    * @returns {void} Returns void
    */
   deleteUser(req, res) {
-    db.Roles.findById(req.decoded.RoleId)
-      .then((role) => {
-        if (role.title === 'Admin') {
-          db.Users.find({ where: {
-            id: req.params.id } })
+    if (Helpers.isOwner(req, res)) {
+      return res.status(403).send({ message: 'You cannot Delete the Admin' });
+    }
+    db.Users.find({ where: {
+      id: req.params.id } })
       .then((user) => {
         user.destroy()
       .then(() => {
-        res.status(201).send({ message: `${req.params.id} has been deleted` });
+        res.status(200).send({ message: `${req.params.id} has been deleted` });
       });
-      });
-        } else {
-          res.status(401).send({ message: 'Unauthorized Access' });
-        }
       });
   }
 };

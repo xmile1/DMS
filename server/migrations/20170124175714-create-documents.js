@@ -8,7 +8,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       content: {
         type: Sequelize.TEXT,
@@ -16,7 +17,7 @@ module.exports = {
       },
       permission: {
         type: Sequelize.TEXT,
-        defaultValue: 'Public'
+        defaultValue: 'public'
       },
       OwnerId: {
         type: Sequelize.INTEGER,

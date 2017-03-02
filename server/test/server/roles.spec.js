@@ -1,6 +1,6 @@
 import chai from 'chai';
 import supertest from 'supertest';
-import helper from './testHelper';
+import helper from '../helpers/testHelper';
 import app from '../../config/app';
 
 const request = supertest.agent(app);
@@ -67,11 +67,10 @@ describe('Role', () => {
       request.post('/api/roles')
         .set({ 'x-access-token': adminDetails.token })
         .send({ title: null })
-        .expect(400)
         .end((err, res) => {
           if (err) return done(err);
-          expect(res.body.message).to.equal('error occured');
-          expect(res.body.details.message.includes('title cannot be null'));
+          expect(500);
+          expect(res.body.message).to.equal('error occurred');
           done();
         });
     });
@@ -84,7 +83,7 @@ describe('Role', () => {
         .expect(200).end((err, res) => {
           expect(Array.isArray(res.body)).to.equal(true);
           expect(res.body[0].title).to.equal('Admin');
-          expect(res.body[1].title).to.equal('Registered');
+          expect(res.body[1].title).to.equal('Regular');
           done();
         });
     });
@@ -117,9 +116,9 @@ describe('Role', () => {
       request.get('/api/roles/5000')
         .set({ 'x-access-token': adminDetails.token })
         .end((err, res) => {
-          expect(res.status).to.equal(404);
+          expect(res.status).to.equal(500);
           expect(res.body.message)
-            .to.equal('Error Occured');
+            .to.equal('Error occurred');
           done();
         });
     });
@@ -162,6 +161,16 @@ describe('Role', () => {
           done();
         });
     });
+    it('Should fail if role title already exist', (done) => {
+      request.put('/api/roles/2')
+        .set({ 'x-access-token': adminDetails.token })
+        .send({ title: 'Admin' })
+        .expect(500)
+        .end((err, res) => {
+          expect(res.body.message.includes('Error Updating Role'));
+          done();
+        });
+    });
   });
 
   describe('Delete role', () => {
@@ -196,7 +205,7 @@ describe('Role', () => {
           expect(typeof res.body).to.equal('object');
           expect(res.body).to.have.property('message');
           expect(res.body.message)
-            .to.equal('Error Occured');
+            .to.equal('Role Does not Exist');
           done();
         });
     });
