@@ -224,7 +224,7 @@ describe('Document', () => {
         .end((err, res) => {
           expect(typeof res.body).to.equal('object');
           expect(res.body.message)
-            .to.equal('Unauthorized Edit Access');
+            .to.equal('Unauthorized Access to this Document');
           done();
         });
     });
@@ -237,7 +237,7 @@ describe('Document', () => {
         .end((err, res) => {
           expect(typeof res.body).to.equal('object');
           expect(res.body.message)
-            .to.equal('Document does not exist');
+            .to.equal('Document with id: 10000 does not exit');
           done();
         });
     });
@@ -261,7 +261,7 @@ describe('Document', () => {
         .end((err, res) => {
           expect(typeof res.body).to.equal('object');
           expect(res.body.message)
-            .to.equal('Unauthorized Delete Access');
+            .to.equal('Unauthorized Access to this Document');
           done();
         });
     });
@@ -273,7 +273,7 @@ describe('Document', () => {
         .end((err, res) => {
           expect(typeof res.body).to.equal('object');
           expect(res.body.message)
-            .to.equal('Document does not exist');
+            .to.equal('Document with id: 100000 does not exit');
           done();
         });
     });
