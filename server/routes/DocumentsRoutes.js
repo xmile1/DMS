@@ -8,15 +8,20 @@ const DocumentsRoutes = (router) => {
   .get(Auth.verifyToken, Auth.verifyAdmin, DocumentsCtrl.getAllDocuments);
 
   router.route('/documents/:id')
-  .get(Auth.verifyToken, DocumentsCtrl.getDocument)
-  .put(Auth.verifyToken, DocumentsCtrl.updateDocument)
-  .delete(Auth.verifyToken, DocumentsCtrl.deleteDoc);
+  .get(Auth.verifyToken, Auth.documentExist, Auth.fullDocumentRight,
+    DocumentsCtrl.getDocument)
+  .put(Auth.verifyToken, Auth.documentExist, Auth.documentRight,
+    DocumentsCtrl.updateDocument)
+  .delete(Auth.verifyToken, Auth.documentExist, Auth.documentRight,
+    DocumentsCtrl.deleteDoc);
 
   router.route('/users/:id/documents/all')
-  .get(Auth.verifyToken, DocumentsCtrl.getAllUserDocuments);
+  .get(Auth.verifyToken, Auth.documentRight,
+    DocumentsCtrl.getAllUserDocuments);
 
   router.route('/users/:id/documents')
-  .get(Auth.verifyToken, DocumentsCtrl.getUserDocuments);
+  .get(Auth.verifyToken, Auth.documentRight,
+    DocumentsCtrl.getUserDocuments);
 };
 
 export default DocumentsRoutes;

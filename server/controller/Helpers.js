@@ -71,6 +71,9 @@ const Helpers = {
   },
   isRelatedToDocument(req, res, document, role) {
     return (document.permission.indexOf(role.title) > -1 && role.write);
+  },
+  isPublic(req, res) {
+    return req.body.document.permission === 'public';
   }
 
 };
