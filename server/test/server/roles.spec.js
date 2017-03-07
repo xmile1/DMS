@@ -116,9 +116,9 @@ describe('Role', () => {
       request.get('/api/roles/5000')
         .set({ 'x-access-token': adminDetails.token })
         .end((err, res) => {
-          expect(res.status).to.equal(500);
+          expect(res.status).to.equal(404);
           expect(res.body.message)
-            .to.equal('Error occurred');
+            .to.equal('Role with Id:5000 does not exist');
           done();
         });
     });
@@ -157,7 +157,7 @@ describe('Role', () => {
         .expect(404)
         .end((err, res) => {
           expect(res.body.message)
-            .to.equal('Role does not exist');
+            .to.equal('Role with Id:10 does not exist');
           done();
         });
     });
@@ -205,7 +205,7 @@ describe('Role', () => {
           expect(typeof res.body).to.equal('object');
           expect(res.body).to.have.property('message');
           expect(res.body.message)
-            .to.equal('Role Does not Exist');
+            .to.equal('Role with Id:10000 does not exist');
           done();
         });
     });

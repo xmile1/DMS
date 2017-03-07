@@ -25,21 +25,8 @@ const RoleCtrl = {
    * @returns {void} Returns void
    */
   getRole(req, res) {
-    return db.Roles.findById(req.params.id)
-    .then((role) => {
-      if (!role.title) {
-        return res.status(404)
-        .send(
-          { message: `Role with Id:${req.params.id} does not exist` });
-      }
-      res.status(200)
-      .send(role);
-    })
-    .catch((err) => {
-      res.status(500)
-      .send(
-        { message: 'Error occurred' });
-    });
+    res.status(200)
+      .send(req.body.role);
   },
 
   /**
@@ -81,6 +68,7 @@ const RoleCtrl = {
     req.body.columnToSearch = 'title';
     Helpers.search(req, res);
   },
+
   /**
    * updateRoles - Update role based on provided parameters
    * @param {Object} req Request Object
@@ -88,23 +76,14 @@ const RoleCtrl = {
    * @returns {void} Returns void
    */
   updateRoles(req, res) {
-    db.Roles.find({ where: {
-      $or: [{ id: req.params.id },
-        { title: req.params.id }]
-    } }).then((role) => {
-      role.update(req.body)
-      .then((updatedRole) => {
-        res.status(200).send({ message: `${req.params.id} updated`,
-          data: updatedRole
-        });
-      }).catch(() => {
-        res.status(500)
-        .send({ message: 'Error Updating Role' });
-      });
-    })
-    .catch((err) => {
-      res.status(404).send({ message: 'Role does not exist'
-      });
+    req.body.role.update(req.body)
+    .then(updatedRole => res
+    .status(200)
+    .send({ message: `${req.params.id} updated`,
+      data: updatedRole
+    })).catch((err) => {
+      res.status(500)
+          .send({ message: 'error occurred' });
     });
   },
 
@@ -115,18 +94,10 @@ const RoleCtrl = {
    * @returns {void} Returns void
    */
   deleteRoles(req, res) {
-    db.Roles.find({ where: {
-      $or: [{ id: req.params.id },
-        { title: req.params.id }]
-    } }).then((role) => {
-      role.destroy()
-      .then(() => {
-        res.status(200)
-        .send({ message: `Role ${req.params.id} deleted` });
-      });
-    }).catch((err) => {
-      res.status(404)
-      .send({ message: 'Role Does not Exist' });
+    req.body.role.destroy()
+    .then(() => {
+      res.status(200)
+      .send({ message: `Role ${req.params.id} deleted` });
     });
   }
 };

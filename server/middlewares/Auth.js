@@ -33,6 +33,7 @@ const Auth = {
       next();
     });
   },
+
   /**
    * verifyAdmin - Verifies if user is an Admin
    * @param {object} req request Object
@@ -112,7 +113,6 @@ const Auth = {
       });
   },
 
-
   /**
    * fullDocumentRight - Checks if a user has neccesary rights including public
    * document access right
@@ -136,7 +136,27 @@ const Auth = {
         return res.status(403)
       .send({ message: 'Unauthorized Access to this Document' });
       });
-  }
+  },
+
+  /**
+   * roleExist - checks if a role exist
+   * @param {object} req request Object
+   * @param {object} res response Object
+   * @param {callback} next callback to the next middleware or function
+   * @returns {Object | void} status response  | void
+   */
+  roleExist(req, res, next) {
+    db.Roles.findById(req.params.id)
+    .then((role) => {
+      if (!role) {
+        return res.status(404)
+        .send(
+          { message: `Role with Id:${req.params.id} does not exist` });
+      }
+      req.body.role = role;
+      next();
+    });
+  },
 
 };
 
