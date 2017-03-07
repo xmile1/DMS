@@ -8,9 +8,11 @@ const RoleRoutes = (router) => {
   .post(Auth.verifyToken, Auth.verifyAdmin, RolesCtrl.createRoles);
 
   router.route('/roles/:id')
-  .get(Auth.verifyToken, Auth.verifyAdmin, RolesCtrl.getRole)
-  .put(Auth.verifyToken, Auth.verifyAdmin, RolesCtrl.updateRoles)
-  .delete(Auth.verifyToken, Auth.verifyAdmin, RolesCtrl.deleteRoles);
+  .get(Auth.verifyToken, Auth.verifyAdmin, Auth.roleExist, RolesCtrl.getRole)
+  .put(Auth.verifyToken, Auth.verifyAdmin, Auth.roleExist,
+  RolesCtrl.updateRoles)
+  .delete(Auth.verifyToken, Auth.verifyAdmin, Auth.roleExist,
+  RolesCtrl.deleteRoles);
 };
 
 export default RoleRoutes;
