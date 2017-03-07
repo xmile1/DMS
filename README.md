@@ -2,50 +2,69 @@
 [![Build Status](https://travis-ci.org/andela-uenabulele/document-management-system.svg?branch=development)](https://travis-ci.org/andela-uenabulele/document-management-system)
 [![Coverage Status](https://coveralls.io/repos/github/andela-uenabulele/document-management-system/badge.svg?branch=development)](https://coveralls.io/github/andela-uenabulele/document-management-system?branch=development)
 
-<!-- [![Code Climate](https://codeclimate.com/github/andela-uenabulele/document-management-system/badges/gpa.svg)](https://codeclimate.com/github/andela-uenabulele/document-management-system) -->
-
 
 Document Management System provides a restful API for users to create and manage documents giving different privileges based on user roles and managing authentication using JWT.
 
-## Technologies Used
-- JavaScript (ES6)
-- Node.js
-- Express
-- Postgresql
-- Sequelize ORM.  
+## API Documentation
+-----
+The API has routes, each dedicated to a single task that uses HTTP response codes to indicate API status and errors.
+#### API Features
 
-## Local Development
-### Prerequisites includes
-- [Postgresql](https://www.postgresql.org/) and
--  [Node.js](http://nodejs.org/) >= v6.8.0.
+The following features make up the Document Management System API:
 
-### Procedure
-1. Clone this repository from a terminal `git clone git@github.com:andela-uenabulele/document-management-system.git`.
-1. Move into the project directory `cd document-management-system`
-1. Install project dependencies `npm install`
-1. Create Postgresql database and run migrations `npm run db:migrations`.
-1. Start the express server `npm start`.
-1. Run test `npm test`.
+###### Authentication
 
+- It uses JSON Web Token (JWT) for authentication.  
+
+- It generates a token on successful login or account creation and returns it to the consumer.  
+
+- It verifies the token to ensures a user is authenticated to access protected endpoints.
+
+###### Users
+
+- It allows users to be created.  
+
+- It allows users to login and obtain a token  
+
+- It allows authenticated users to retrieve and update their information.  
+
+- It allows the admin to manage users.
+
+###### Roles
+
+- It ensures roles can be created, retrieved, updated and deleted by an admin user.
+- A non-admin user cannot create, retrieve, modify, or delete roles.  
+- it allows for assignment of roles to users
+
+###### Documents
+
+- It allows new documents to be created by authenticated users.  
+
+- It ensures all documents are accessible based on the permission specified.  
+
+- It allows admin users to create, retrieve, modify, and delete documents.
+
+
+- It ensures users can delete, edit and update documents that they own.  
+
+- It allows users to retrieve all documents they own as well as public documents.
+
+###### Search
+
+- It allows users to search public documents for a specified search term.
+- It allows admin to retrieve all documents that matches search term.
+- It allows admin to search users based on a specified search term
+- it allows admin to search roles based in a specified search term.
+
+---
 ### Postman Collection
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/af275c0853c53335ae41)
 
-Create a Postman environment and set `url` and `token` variables or download and import a production environment from this [link][postman-env-link]
-
-## Deployment
-Deploy this project to Heroku by clicking the button below.
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/andela-uenabulele/document-magement-system)
-
-Set a `SECRET_TOKEN` environmet variable, and create a Postgresql add-on.
+## Hosted App on Heroku
+[Heroku Link](https://docmgtsys.herokuapp.com/)
 
 ---
 
-# API Documentation
-The API has routes, each dedicated to a single task that uses HTTP response codes to indicate API status and errors.
-
-## Authentication
-Users are assigned a token when signup or signin. This token is needed for subsequent HTTP requests to the API for authentication and can be attached as values to the header's `x-acess-token` or `authorization` key. API requests made without authentication will fail with the status code `401: Unauthorized Access`.
 
 ## Below are the API endpoints and their functions
 EndPoint                      |   Functionality
@@ -320,7 +339,7 @@ Endpoint for document API.
 #### Documents
 
 #### Request
-- Endpoint: GET: `/search/documents/:term`
+- Endpoint: GET: `/search/documents/?term=searchterm`
 - Requires: Authentication
 
 #### Response
@@ -350,7 +369,7 @@ Endpoint for document API.
 ### Users
 
 #### Request
-- Endpoint: GET: `/search/users/:term`
+- Endpoint: GET: `/search/users/?term=searchterm`
 - Requires: Authentication, Admin Role
 
 #### Response
@@ -378,3 +397,33 @@ Endpoint for document API.
   "updatedAt": "2017-02-19T17:34:19.992Z"
 }]
 ```
+---
+## Technologies Used
+- JavaScript (ES6)
+- Node.js
+- Express
+- Postgresql
+- Sequelize ORM.  
+
+
+## Contribute
+### Prerequisites includes
+- [Postgresql](https://www.postgresql.org/) and
+-  [Node.js](http://nodejs.org/) >= v6.8.0.
+
+### Procedure
+1. Clone this repository from a terminal `git clone git@github.com:andela-uenabulele/document-management-system.git`.
+1. Move into the project directory `cd document-management-system`
+1. Install project dependencies `npm install`
+1. Create Postgresql database and run migrations `npm run db:migrations`.
+1. Start the express server `npm start`.
+1. Run test `npm test`.
+2. Make changes and commit your changes
+4. git push and make a pull request to my repo
+
+## Deployment
+Deploy this project to Heroku by clicking the button below.
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/andela-uenabulele/document-magement-system)
+
+Set a `SECRET_TOKEN` environmet variable, and create a Postgresql add-on.

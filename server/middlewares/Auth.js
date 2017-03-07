@@ -54,21 +54,6 @@ const Auth = {
   },
 
   /**
-   * checkPassedId - check if a req.body.id is passed
-   * @param {object} req request Object
-   * @param {object} res response Object
-   * @param {callback} next callback to the next middleware or function
-   * @returns {Object | void} status response | void
-   */
-  checkPassedId(req, res, next) {
-    if (req.body.id) {
-      return res.status(403)
-      .send({ message: 'you cannot pass an Id' });
-    }
-    next();
-  },
-
-  /**
    * documentExist - checks if a document exist
    * @param {object} req request Object
    * @param {object} res response Object

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import db from '../models';
-import Helpers from './Helpers';
+import Helpers from '../Helpers/Helpers';
 
 const secret = process.env.SECRET || 'just another open secret';
 
@@ -35,13 +35,15 @@ const UsersCtrl = {
               message: 'Email already exists'
             });
         }
-        if (req.body.RoleId === 1) {
+        if (req.body.RoleId === '1') {
           return res.status(403)
             .send({
               message: 'You cannot signup as an Admin'
             });
         }
-        db.Users.create(req.body)
+        const { username, fullNames, email, password } = req.body;
+        const userToCreate = { username, fullNames, email, password };
+        db.Users.create(userToCreate)
             .then((newUser) => {
               const token = jwt.sign({
                 UserId: newUser.id,
@@ -160,7 +162,9 @@ const UsersCtrl = {
   searchUsers(req, res) {
     req.body.entity = 'Users';
     req.body.columnToSearch = 'fullNames';
-    Helpers.search(req, res);
+    Helpers.search(req, res).then((result) => {
+      res.status(200).send(result);
+    });
   },
   /**
    * updateUser - Update user details
@@ -188,11 +192,6 @@ const UsersCtrl = {
         }
       });
   },
-
-  // searchUsers(){
-  //   req.entity = 'Users';
-  //   helper.search()
-  // },
 
   /**
    * deleteUser - Delete a user

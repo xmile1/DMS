@@ -65,14 +65,10 @@ describe('Document MODEL:', () => {
       it('ensures a document is unique', (done) => {
         model.Documents.create(documentParams)
           .then(() => {
-            model.Documents.create(documentParams)
-            .then((ww) => {
-            })
-              .catch((error) => {
-                expect(/UniqueConstraintError/.test(error.name)).to.be.true;
-                done();
-              });
-          }).catch((err) => {
+            model.Documents.create(documentParams).catch((error) => {
+              expect(/UniqueConstraintError/.test(error.name)).to.be.true;
+              done();
+            });
           });
       });
     });
