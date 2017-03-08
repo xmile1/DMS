@@ -4,7 +4,7 @@ dotenv.config();
 
 const config = {
   development: {
-    url: process.env.DEV_DATABASE_URL,
+    url: process.env.DATABASE_URL,
     dialect: 'postgres'
   },
   test: {
