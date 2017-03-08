@@ -12,9 +12,9 @@ let testDetails;
 
 describe('Document', () => {
   before((done) => {
-    request.post('/api/users')
+    request.post('/api/users/login')
       .type('form')
-      .send(helper.admin())
+      .send({ username: 'uyiosa', password: 'uyiosa' })
       .end((err, res) => {
         adminDetails = res.body;
         request.post('/api/users')

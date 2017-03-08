@@ -11,9 +11,9 @@ let regularDetails;
 
 describe('Role', () => {
   before((done) => {
-    request.post('/api/users')
-        .type('form')
-        .send(helper.admin())
+    request.post('/api/users/login')
+      .type('form')
+      .send({ username: 'uyiosa', password: 'uyiosa' })
         .end((err, res) => {
           adminDetails = res.body;
           request.post('/api/users')

@@ -1,5 +1,5 @@
 import db from '../models';
-import Helpers from './Helpers';
+import Helpers from '../Helpers/Helpers';
 
 const RoleCtrl = {
 
@@ -66,7 +66,9 @@ const RoleCtrl = {
   searchRoles(req, res) {
     req.body.entity = 'Roles';
     req.body.columnToSearch = 'title';
-    Helpers.search(req, res);
+    Helpers.search(req, res).then((result) => {
+      res.status(200).send(result);
+    });
   },
 
   /**

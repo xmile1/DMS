@@ -66,7 +66,7 @@ describe('Search', () => {
         .set({ 'x-access-token': adminDetails.token })
         .end((err, res) => {
           expect(res.body.metadata)
-          .to.be.eql({ count: 2, pages: 2, currentPage: 2 });
+          .to.be.eql({ count: 2, pages: 2, currentPage: 2, pageSize: 1 });
           done();
         });
      });
@@ -135,7 +135,7 @@ describe('Search', () => {
           .set({ 'x-access-token': adminDetails.token })
           .end((err, res) => {
             expect(res.body.metadata)
-            .to.be.eql({ count: 2, pages: 2, currentPage: 2 });
+            .to.be.eql({ count: 2, pages: 2, currentPage: 2, pageSize: 1 });
             done();
           });
        });
@@ -167,7 +167,7 @@ describe('Search', () => {
           .set({ 'x-access-token': adminDetails.token })
           .end((err, res) => {
             expect(res.body.metadata)
-            .to.be.eql({ count: 1, pages: 1, currentPage: 2 });
+            .to.be.eql({ count: 1, pages: 1, currentPage: 2, pageSize: 0 });
             done();
           });
        });

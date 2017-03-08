@@ -48,6 +48,18 @@ describe('Users', () => {
       });
     });
 
+    it('Should fail if a user tries to register as an admin', (done) => {
+      const user = helper.user();
+      user.RoleId = '1';
+      request.post('/api/users')
+      .send(user)
+      .end((err, res) => {
+        expect(res.body.message
+        .includes('You cannot signup as an Admin'));
+        done();
+      });
+    });
+
     it('new users should be assigned a default role(id=2,Regular)',
      (done) => {
        request.post('/api/users')
@@ -148,9 +160,9 @@ describe('Users', () => {
 
   describe('Get Users', () => {
     before((done) => {
-      request.post('/api/users')
+      request.post('/api/users/login')
         .type('form')
-        .send(helper.admin())
+        .send({ username: 'uyiosa', password: 'uyiosa' })
         .end((err, res) => {
           adminDetails = res.body;
           request.post('/api/users')
@@ -245,9 +257,9 @@ describe('Users', () => {
 
   describe('Update User', () => {
     before((done) => {
-      request.post('/api/users')
+      request.post('/api/users/login')
         .type('form')
-        .send(helper.admin())
+        .send({ username: 'uyiosa', password: 'uyiosa' })
         .end((err, res) => {
           adminDetails = res.body;
           request.post('/api/users')
@@ -314,9 +326,9 @@ describe('Users', () => {
 
   describe('Delete User', () => {
     before((done) => {
-      request.post('/api/users')
+      request.post('/api/users/login')
         .type('form')
-        .send(helper.admin())
+        .send({ username: 'uyiosa', password: 'uyiosa' })
         .end((err, res) => {
           adminDetails = res.body;
           request.post('/api/users')

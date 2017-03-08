@@ -1,5 +1,5 @@
 import db from '../models';
-import Helpers from './Helpers';
+import Helpers from '../Helpers/Helpers';
 
 const DocumentsCtrl = {
 
@@ -74,41 +74,66 @@ const DocumentsCtrl = {
     .send(req.body.document);
   },
 
-    /**
-     * searchDocuments - Search list of documents where the search term
-     * matches the title
-     * @param {Object} req Request Object
-     * @param {Object} res Response Object
-     * @returns {void} Returns void
-     */
+  /**
+   * searchDocuments - Search list of documents where the search term
+   * matches the title
+   * @param {Object} req Request Object
+   * @param {Object} res Response Object
+   * @returns {void} Returns void
+   */
   searchDocuments(req, res) {
     req.body.entity = 'Documents';
     req.body.columnToSearch = 'title';
-    Helpers.search(req, res);
+    Helpers.search(req, res).then((result) => {
+      res.status(200).send(result);
+    });
   },
 
   /**
-   * searchUserDocuments - Search list of document where the search term
-   * matches the fullnames
+   * searchUserDocuments - Search list of user's document where the search term
+   * matches the document's title
    * @param {Object} req Request Object
    * @param {Object} res Response Object
    * @returns {void} Returns void
    */
   searchUserDocuments(req, res) {
-    req.body.requester = 'User Documents';
-    Helpers.search(req, res);
+    if (Helpers.isAdmin(req, res) || Helpers.isOwner(req, res)) {
+      req.body.entity = 'Documents';
+      req.body.searchQuery = {
+        OwnerId: req.params.userId,
+        title: {
+          $iLike: `%${req.query.term}%` }
+      };
+      Helpers.search(req, res).then((result) => {
+        res.status(200).send(result);
+      });
+    } else {
+      return res.send({ message: 'Unauthorized Access' });
+    }
   },
 
 /**
- * searchUsers - Search list of user where the search term
- * matches the fullnames
+ * searchUsers - Search list of user's and public documents
+ * where the search term matches the document's title
  * @param {Object} req Request Object
  * @param {Object} res Response Object
  * @returns {void} Returns void
  */
   searchAllUserDocuments(req, res) {
-    req.body.requester = 'All User Documents';
-    Helpers.search(req, res);
+    // req.body.requester = 'All User Documents';
+    req.body.entity = 'Documents';
+    if (Helpers.isAdmin(req, res) || Helpers.isOwner(req, res)) {
+      req.body.searchQuery = {
+        $and: { $or: {
+          permission: 'public', OwnerId: req.params.userId },
+          title: { $iLike: `%${req.query.term}%` } }
+      };
+      Helpers.search(req, res).then((result) => {
+        res.status(200).send(result);
+      });
+    } else {
+      return res.send({ message: 'Unauthorized Access' });
+    }
   },
 
   /**
