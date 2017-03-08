@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import 'babel-polyfill';
 import httpMocks from 'node-mocks-http';
 import chai from 'chai';
@@ -85,8 +86,24 @@ describe('Middleware Test', () => {
       };
 
       sinon.spy(middlewareStub, 'callback');
-      Auth.verifyToken(req, res, middlewareStub);
+      Auth.verifyToken(req, res, middlewareStub.callback);
       expect(middlewareStub.callback).to.have.been.called;
+      done();
+    });
+
+    it('should not call next function if the token is not passed', (done) => {
+      const res = createResponse();
+      const req = httpMocks.createRequest({
+        method: 'POST',
+        url: '/api/users/login',
+      });
+      const middlewareStub = {
+        callback: () => {}
+      };
+
+      sinon.spy(middlewareStub, 'callback');
+      Auth.verifyToken(req, res, middlewareStub.callback);
+      expect(middlewareStub.callback).not.to.have.been.called;
       done();
     });
   });
@@ -127,6 +144,24 @@ describe('Middleware Test', () => {
       expect(middlewareStub.callback).to.have.been.called;
       done();
     });
+
+    it('should not call next function if the user is not the admin', (done) => {
+      const res = createResponse();
+      const req = httpMocks.createRequest({
+        method: 'GET',
+        url: '/api/users/',
+        decoded: { RoleId: 2 }
+      });
+
+      const middlewareStub = {
+        callback: () => {}
+      };
+
+      sinon.spy(middlewareStub, 'callback');
+      Auth.verifyToken(req, res, middlewareStub.callback);
+      expect(middlewareStub.callback).not.to.have.been.called;
+      done();
+    });
   });
 
   describe('DocumentExist', () => {
@@ -161,6 +196,24 @@ describe('Middleware Test', () => {
       sinon.spy(middlewareStub, 'callback');
       Auth.documentExist(req, res, middlewareStub.callback);
       expect(middlewareStub.callback).to.have.been.called;
+      done();
+    });
+
+    it('should not call next if document does not exist', (done) => {
+      const res = createResponse();
+      const req = httpMocks.createRequest({
+        method: 'GET',
+        url: '/api/users/',
+        params: { id: 5000 }
+      });
+
+      const middlewareStub = {
+        callback: () => {}
+      };
+
+      sinon.spy(middlewareStub, 'callback');
+      Auth.documentExist(req, res, middlewareStub.callback);
+      expect(middlewareStub.callback).not.to.have.been.called;
       done();
     });
   });
@@ -199,6 +252,27 @@ describe('Middleware Test', () => {
       sinon.spy(middlewareStub, 'callback');
       Auth.documentRight(req, res, middlewareStub.callback);
       expect(middlewareStub.callback).to.have.been.called;
+      done();
+    });
+
+    it('returns an error if user does not have the document rights', (done) => {
+      const res = createResponse();
+      const req = httpMocks.createRequest({
+        method: 'GET',
+        url: '/api/users/',
+        params: { id: 5000 },
+        decoded: { RoleId: 2, UserId: 2 },
+        document: { permission: '14' },
+        body: { document: { permission: 'john' } }
+      });
+
+      const middlewareStub = {
+        callback: () => {}
+      };
+
+      sinon.spy(middlewareStub, 'callback');
+      Auth.documentRight(req, res, middlewareStub.callback);
+      expect(middlewareStub.callback).not.to.have.been.called;
       done();
     });
   });
