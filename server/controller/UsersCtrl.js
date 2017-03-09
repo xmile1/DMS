@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import db from '../models';
-import Helpers from '../Helpers/Helpers';
+import Helpers from '../helpers/Helpers';
 
 const secret = process.env.SECRET || 'just another open secret';
 

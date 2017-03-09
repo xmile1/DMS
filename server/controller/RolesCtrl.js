@@ -1,5 +1,5 @@
 import db from '../models';
-import Helpers from '../Helpers/Helpers';
+import Helpers from '../helpers/Helpers';
 
 const RoleCtrl = {
 

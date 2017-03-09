@@ -22,9 +22,22 @@ const Helpers = {
    * @returns {String|null}  valid input or null
    */
   validateInput(data) {
+    if (!data) return 0;
     return data
-    && (data < 1 || isNaN(data)) ?
-     null : data;
+    && (data < 0 || isNaN(data)) ?
+     0 : data;
+  },
+
+  /**
+   * validatelimit - checks if input is a negative number or not a number
+   * @param {String} data data to be tested
+   * @returns {String|null}  valid input or null
+   */
+  validateLimit(data) {
+    if (!data) return 10;
+    return data
+    && (data < 0 || isNaN(data)) ?
+     10 : data;
   },
 
 
@@ -38,7 +51,7 @@ const Helpers = {
     return new Promise((resolve, reject) => {
       const term = req.query.term;
       const offset = Helpers.validateInput(req.query.offset);
-      const limit = Helpers.validateInput(req.query.limit);
+      const limit = Helpers.validateLimit(req.query.limit);
 
       let columnToSearch = {};
       columnToSearch[req.body.columnToSearch] = { $iLike: `%${term}%` };
@@ -49,10 +62,21 @@ const Helpers = {
         order: '"createdAt" DESC',
         where: columnToSearch })
     .then((result) => {
-      const metadata = limit && offset ? { count: result.count,
-        pages: Math.ceil(result.count / limit),
-        currentPage: Math.floor(offset / limit) + 1,
-        pageSize: result.rows.length } : null;
+      let pages = Math.ceil(result.count / limit) ?
+       Math.ceil(result.count / limit) : undefined;
+
+      let currentPage = Math.floor(offset / limit) ?
+       Math.floor(offset / limit) + 1 : undefined;
+
+      if (result.count < limit) pages = 1;
+      if (offset === '0') currentPage = 1;
+
+      let metadata = { count: result.count,
+        pages,
+        currentPage,
+        pageSize: result.rows.length };
+      if (result.rows.length === 0) metadata = { count: result.count };
+
       resolve({ result: result.rows, metadata });
     });
     });

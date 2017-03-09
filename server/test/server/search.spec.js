@@ -71,13 +71,13 @@ describe('Search', () => {
         });
      });
 
-    it('Should return null metadata for invalid limits and offset',
+    it('Should return default based metadata for invalid limits and offset',
        (done) => {
          request.get('/api/search/documents/?term=special&limit=-1&offset=-1')
           .set({ 'x-access-token': adminDetails.token })
           .end((err, res) => {
             expect(res.body.metadata)
-            .to.be.eql(null);
+            .to.be.eql({ count: 2, pages: 1, pageSize: 2 });
             done();
           });
        });
@@ -139,13 +139,13 @@ describe('Search', () => {
             done();
           });
        });
-      it('Should return null metadata for invalid limits and offset',
+      it('Should return default based metadata for invalid limits and offset',
          (done) => {
            request.get('/api/search/users/?term=dmin&limit=-1&offset=-1')
             .set({ 'x-access-token': adminDetails.token })
             .end((err, res) => {
               expect(res.body.metadata)
-              .to.be.eql(null);
+              .to.be.eql({ count: 0 });
               done();
             });
          });
@@ -167,18 +167,18 @@ describe('Search', () => {
           .set({ 'x-access-token': adminDetails.token })
           .end((err, res) => {
             expect(res.body.metadata)
-            .to.be.eql({ count: 1, pages: 1, currentPage: 2, pageSize: 0 });
+            .to.be.eql({ count: 1 });
             done();
           });
        });
 
-      it('Should return null metadata for invalid limits and offset',
+      it('Should return  default based metadata for invalid limits and offset',
         (done) => {
           request.get('/api/search/roles/?term=dmin&limit=-1&offset=-1')
            .set({ 'x-access-token': adminDetails.token })
            .end((err, res) => {
              expect(res.body.metadata)
-             .to.be.eql(null);
+             .to.be.eql({ count: 1, pages: 1, pageSize: 1 });
              done();
            });
         });

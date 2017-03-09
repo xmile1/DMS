@@ -91,10 +91,6 @@ describe('User Model Validation', () => {
 
   describe('Password Validation', () => {
     before(() => model.Users.destroy({ where: { id: user.id } }));
-    after((done) => {
-      model.sequelize.sync({ force: true });
-      done();
-    });
     it('should be valid if compared', (done) => {
       model.Users.build(userParams).save()
         .then((createdUser) => {
